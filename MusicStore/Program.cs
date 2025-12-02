@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using MusicStore.Data;
+using MusicStore.IRepositories;
+using MusicStore.IServieces;
+using MusicStore.Repositories;
+using MusicStore.Servieses;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +16,17 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer("Server=Srv2\\pupils;DataBase=329111116_StoreMusic;Integrated Security=SSPI;Persist Security Info=False;TrustServerCertificate=True;"));
+//Repository
+builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+//Service
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build
 ();

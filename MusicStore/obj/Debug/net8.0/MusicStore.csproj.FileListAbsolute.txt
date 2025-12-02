@@ -339,3 +339,4 @@ M:\MusicStore\MusicStore\obj\Debug\net8.0\MusicStore.pdb
 M:\MusicStore\MusicStore\obj\Debug\net8.0\MusicStore.genruntimeconfig.cache
 M:\MusicStore\MusicStore\obj\Debug\net8.0\ref\MusicStore.dll
 M:\MusicStore\MusicStore\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+M:\MusicStore\MusicStore\obj\Debug\net8.0\MusicStore.sourcelink.json

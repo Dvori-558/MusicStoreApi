@@ -1,12 +1,18 @@
 ﻿using MusicStore.Dto;
+using MusicStore.IRepositories;
+using MusicStore.IServieces;
 using MusicStore.Models;
 using MusicStore.Repositories;
 
 namespace MusicStore.Servieses
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
-        private readonly ProductRepository _repository = new();
+        private readonly IProductRepository _repository;
+        public ProductService(IProductRepository productRepository)
+        {
+            _repository = productRepository;
+        }
         //get
         public dynamic ProductWithCategory()
         {

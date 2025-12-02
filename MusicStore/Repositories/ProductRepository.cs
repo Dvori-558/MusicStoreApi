@@ -2,17 +2,23 @@
 using Microsoft.EntityFrameworkCore;
 using MusicStore.Data;
 using MusicStore.Dto;
+using MusicStore.IRepositories;
 using MusicStore.Models;
 
 namespace MusicStore.Repositories
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
-        StoreContext context = StoreContextFactory.CreateContext();
+        //StoreContext context = StoreContextFactory.CreateContext();
+        private readonly StoreContext _context;
+        public ProductRepository(StoreContext storeContext)
+        {
+            _context = storeContext;
+        }
         //get
         public dynamic ProductWithCategory()
         {
-            return context.Products.Include(x => x.Category)
+            return _context.Products.Include(x => x.Category)
                                    .Where(x => x.IsDeleted == false)
                                    .Select(x => new { x.Name, x.Category })
                                    .ToList();
@@ -20,7 +26,7 @@ namespace MusicStore.Repositories
 
         public dynamic ProductOrderByTitle()
         {
-            return context.Products
+            return _context.Products
                            .Select(x => x)
                            .Where(x => x.IsDeleted == false)
                            .OrderBy(x => x.Name)
@@ -42,20 +48,20 @@ namespace MusicStore.Repositories
                 };
                 products.Add(product);
             }
-            context.Products.AddRange(products);
-            context.SaveChanges();
+            _context.Products.AddRange(products);
+            _context.SaveChanges();
         }
         //put
 
         //delete
         public bool DeleteProduct(int productId)
         {
-            var a = context.Products
+            var a = _context.Products
                                   .FirstOrDefault(x => x.Id == productId);
             if (a != null)
             {
                 a.IsDeleted = true;
-                context.SaveChanges();
+                _context.SaveChanges();
                 return true;
             }
             return false;

@@ -3,25 +3,31 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using MusicStore.Data;
 using MusicStore.Dto;
+using MusicStore.IRepositories;
 using MusicStore.Models;
 using System.Reflection.Metadata;
 
 namespace MusicStore.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
-        StoreContext context = StoreContextFactory.CreateContext();
+        //StoreContext context = StoreContextFactory.CreateContext();
+        private readonly StoreContext _context;
+        public UserRepository(StoreContext storeContext)
+        {
+            _context = storeContext;
+        }
         //get
         public List<UserDto> GetUsers()
         {
-            return context.Users.Select(
-                                        x=>new UserDto() { Name=x.Name,Username=x.Username}
+            return _context.Users.Select(
+                                        x => new UserDto() { Name = x.Name, Username = x.Username }
                                         ).ToList();
         }
         //post
         public int CreateUser(CreateUserDto user)
         {
-            using var transaction = context.Database.BeginTransaction();
+            using var transaction = _context.Database.BeginTransaction();
             try
             {
                 var outputParam = new SqlParameter
@@ -38,11 +44,11 @@ namespace MusicStore.Repositories
                     new SqlParameter("@Password",user.Password),
                     outputParam
                  };
-                context.Database.
+                _context.Database.
                     ExecuteSqlRaw("EXEC createUser @Name ,@UserName, @Password,@id OUTPUT", parameters);
                 int UserId = (int)outputParam.Value;
 
-                context.Database.ExecuteSqlInterpolated($@"EXEC updateUser @id={UserId},@Password={user.Password + '!'}");
+                _context.Database.ExecuteSqlInterpolated($@"EXEC updateUser @id={UserId},@Password={user.Password + '!'}");
                 transaction.Commit();
                 return UserId;
             }
